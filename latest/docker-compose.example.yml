@@ -1,0 +1,39 @@
+services:
+  minecraft_neoforge:
+    build:
+      context: .
+      dockerfile: Dockerfile.amd64
+      args:
+        NEOFORGE_VERSION: 21.1.234
+        MINECRAFT_VERSION: 1.21.1
+
+    ports:
+      - "25565:25565"
+      - "25575:25575"   # RCON (optional)
+      - "8123:8123"     # Dynmap (optional)
+
+    environment:
+      # Required
+      MINECRAFT_EULA: "true"
+
+      # Basic server settings
+      MINECRAFT_MEMORY: "4G"
+      MINECRAFT_MOTD: "Paradise Lost"
+      MINECRAFT_MAX_PLAYERS: "32"
+      MINECRAFT_DIFFICULTY: "2"
+      MINECRAFT_GAMEMODE: "survival"
+      MINECRAFT_ENABLE_COMMAND_BLOCK: "true"
+
+      # RCON
+      MINECRAFT_ENABLE_RCON: "true"
+      MINECRAFT_RCON_PASSWORD: "some-password-here@1"
+
+      # Dynmap
+      MINECRAFT_ENABLE_DYNMAP: "true"
+
+    volumes:
+      - ./mods:/usr/share/minecraft/mods
+      - ./data:/var/lib/minecraft
+      - ./override:/etc/minecraft/override
+
+    restart: unless-stopped
